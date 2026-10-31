@@ -1,0 +1,6 @@
+datos/
+Cerebro Ramón/
+*.xlsx
+*.pdf
+.DS_Store
+__pycache__/
