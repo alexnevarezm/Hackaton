@@ -6,6 +6,8 @@ RAIZ = pathlib.Path(__file__).resolve().parent.parent
 DAT = RAIZ / "datos"
 B = RAIZ / "Cerebro Ramón"
 S = pd.read_csv(DAT / "sentencias.csv", low_memory=False)
+S = S[~S.sid.astype(str).isin(json.load(open(DAT / "excluidas.json")))]
+VIG = set(pd.read_csv(DAT / "ordinarios_vigentes.csv", usecols=["sid"]).sid)
 meta = {int(r.sid): r for r in S.itertuples()}
 TOTAL = len(json.load(open(DAT / "lotes.json")))
 F, malas = [], 0
@@ -24,6 +26,8 @@ NOM = {"renuncia_escrita": "Renuncia escrita", "renuncia_verbal": "Renuncia verb
        "ofrecimiento_trabajo": "Ofrecimiento de trabajo", "prescripcion": "Prescripción", "rescision": "Rescisión justificada", "contrato_determinado": "Contrato por tiempo u obra determinados", "convenio_finiquito": "Convenio, finiquito y cosa juzgada",
        "pago": "Pago", "falta_accion": "Falta de acción y derecho", "oscuridad": "Oscuridad de la demanda", "sustitucion_solidaria": "Sustitución y solidaridad", "confianza": "Trabajador de confianza", "otra": "Otras defensas"}
 ls = lambda v: v if isinstance(v, list) else []
+TODAS = F
+F = [x for x in F if x["sid"] in VIG and x.get("contesto") is True]
 d = C.defaultdict(list)
 for x in F:
     for e in ls(x.get("defensas")):
@@ -69,7 +73,7 @@ for campo, tit, arch in (("errores_patronales", "Errores patronales", "Errores p
             t += [f"- {a}" for a in v]
     (L / f"{arch}.md").write_text("\n".join(t), encoding="utf8")
 # Ficha en cada sentencia
-for x in F:
+for x in TODAS:
     p = B / "Sentencias" / meta[x["sid"]].tribunal / (nota(x["sid"]) + ".md")
     if p.exists():
         s = p.read_text(encoding="utf8")
@@ -85,9 +89,7 @@ for x in F:
         if h != r: dif.append(x["sid"])
 juez = C.Counter(x.get("juzgador", "") for x in F)
 txt = f"""# Lectura a fondo: estado
-**{len(F)} de 319** sentencias contestadas tienen ficha. Lectura hecha por subagentes y no revisada una por una.
-
-**Sesgo de avance:** se procesaron primero las sentencias más largas, así que si faltan fichas la muestra pesa hacia los juicios más complejos. No extrapolar estas cuentas a todo el tribunal hasta completar la lectura.
+**{len(TODAS)} sentencias** tienen ficha. Las tablas usan {len(F)} sentencias ordinarias contestadas, la última de cada expediente. Lectura hecha por subagentes y no revisada una por una.
 
 Contraste con las reglas automáticas sobre la acción principal: coinciden en {ac} de {tot}. Diferencias a revisar: {", ".join(enl(s) for s in dif) or "ninguna"}.
 

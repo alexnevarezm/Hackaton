@@ -25,6 +25,7 @@ def tasa(df):
 
 def cargar():
     d = pd.read_csv(DAT / "sentencias.csv", low_memory=False)
+    d = d[~d.sid.astype(str).isin(json.load(open(DAT / "excluidas.json")))]
     d["juez"] = d["juez"].replace(JUEZ).fillna("Sin identificar")
     d["registros"] = d["registros"].fillna("")
     return d

@@ -10,6 +10,7 @@ E = json.load(open(DAT / "estimador.json"))["evaluacion"]
 J = json.load(open(DAT / "jurisprudencia.json"))
 C = json.load(open(DAT / "citas_por_registro.json"))
 S = pd.read_csv(DAT / "sentencias.csv", low_memory=False)
+S = S[~S.sid.astype(str).isin(json.load(open(DAT / "excluidas.json")))]
 EMB = json.load(open(DAT / "embudo.json"))
 
 for sub in ("Sentencias", "Jurisprudencia", "Juzgadores", "Defensas"):
