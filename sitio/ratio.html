@@ -1,0 +1,229 @@
+<title>Ratio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Análisis estimado para juicios ordinarios laborales en la ciudad de Aguascalientes, México, comparado con los datos públicos del tribunal.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,ital,wght@7..72,0,400;7..72,0,600;7..72,1,400&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Concepto: la página sigue la anatomía de una sentencia (Vistos, Considerandos, Resuelve). */
+:root {
+  --bg: #f4f5f2; --surface: #e9ebe6; --ink: #101c26; --muted: #52606b; --line: #c7ccc6;
+  --accent: #8a5c08; --accent-soft: #e9d8ad; --band: #2d7d80;
+  --display: "Literata", Georgia, serif; --body: "Figtree", "Helvetica Neue", Arial, sans-serif; --data: "IBM Plex Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e1a24; --surface: #16252f; --ink: #f1eee6; --muted: #9aa8b3; --line: #2d3e4a;
+  --accent: #d9a441; --accent-soft: #3c3220; --band: #4fa3a5; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0e1a24; --surface: #16252f; --ink: #f1eee6; --muted: #9aa8b3; --line: #2d3e4a;
+  --accent: #d9a441; --accent-soft: #3c3220; --band: #4fa3a5; color-scheme: dark }
+* { box-sizing: border-box }
+html { scroll-behavior: smooth }
+body { background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.6 var(--body); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
+.marco { max-width: 1080px; margin-inline: auto }
+a { color: inherit; text-underline-offset: 3px }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; margin: 0 }
+p { margin: 0 }
+.cab { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding-block: 22px; border-bottom: 1px solid var(--line) }
+.marca { font: 600 1.75rem/1 var(--display); text-decoration: none }
+.marca i { color: var(--accent); font-style: normal }
+.cab nav { display: flex; gap: 20px; flex-wrap: wrap; font-size: .95rem }
+.cab nav a { text-decoration: none; color: var(--muted) }
+.cab nav a:hover { color: var(--ink) }
+.etiqueta { font: 500 .78rem/1.3 var(--data); letter-spacing: .14em; text-transform: uppercase; color: var(--accent) }
+.expediente { font: 400 .82rem/1.5 var(--data); color: var(--muted) }
+.heroe { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 72px); padding-block: clamp(48px, 8vw, 88px) clamp(40px, 6vw, 64px); align-items: start }
+.heroe h1 { font-size: clamp(2.5rem, 6.4vw, 4.5rem); line-height: 1.04; font-weight: 400; font-style: italic; margin-block: 18px 24px }
+.entrada { font-size: 1.2rem; max-width: 34em }
+.alcance { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 8px 22px; font: 400 .85rem/1.4 var(--data); color: var(--muted) }
+.boton { display: inline-block; margin-top: 30px; padding: 13px 22px; background: var(--ink); color: var(--bg); font-weight: 600; text-decoration: none; border-radius: 3px }
+.boton:hover { background: var(--accent); color: var(--bg) }
+.simulador { background: var(--surface); padding: 24px; border-radius: 4px }
+.simulador h2 { font: 600 1rem/1.3 var(--body) }
+.valor { font: 600 clamp(3rem, 8vw, 4.25rem)/1 var(--display); color: var(--accent); margin-block: 20px 8px; font-variant-numeric: tabular-nums }
+.nota { font-size: .86rem; color: var(--muted) }
+.pista { position: relative; height: 10px; background: var(--line); border-radius: 5px; margin-block: 26px 8px }
+.rango { position: absolute; top: 0; bottom: 0; left: calc(var(--p) * 1% - 9%); width: 18%; background: var(--band); border-radius: 5px; transition: left .45s ease }
+.punto { position: absolute; top: 50%; left: calc(var(--p) * 1%); width: 22px; height: 22px; margin: -11px 0 0 -11px; background: var(--accent); border: 3px solid var(--surface); border-radius: 50%; transition: left .45s ease }
+.extremos { display: flex; justify-content: space-between; font-size: .8rem; color: var(--muted) }
+.etapas { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 20px 16px }
+.etapas button { font: 500 .86rem/1 var(--body); padding: 9px 11px; background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 3px; cursor: pointer; min-height: 38px }
+.etapas button:hover { border-color: var(--accent) }
+.etapas button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg) }
+.ilustrativo { font: 500 .76rem/1.4 var(--data); letter-spacing: .08em; text-transform: uppercase; color: var(--accent) }
+section { padding-block: clamp(44px, 7vw, 76px); border-top: 1px solid var(--line) }
+.apertura { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr); gap: 16px clamp(24px, 5vw, 64px) }
+.apertura h2 { font-size: clamp(1.8rem, 4vw, 2.75rem); line-height: 1.12; margin-bottom: 20px }
+.parte { font: 500 clamp(.95rem, 2vw, 1.1rem)/1.3 var(--data); letter-spacing: .32em; color: var(--accent) }
+.texto { max-width: 40em; display: grid; gap: 16px }
+.cifras { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin-top: 40px }
+.cifras b { display: block; font: 600 clamp(2rem, 4.4vw, 3rem)/1.05 var(--display); font-variant-numeric: tabular-nums }
+.cifras span { display: block; margin-top: 8px; font-size: .95rem }
+.cifras small { display: block; margin-top: 6px; color: var(--muted); font-size: .84rem; line-height: 1.45 }
+.corte { display: grid; grid-template-columns: 653fr 108fr; gap: 3px; margin-top: 40px }
+.corte div { padding: 12px; font-size: .86rem; line-height: 1.35; min-width: 0 }
+.corte .a { background: var(--line) }
+.corte .d { background: var(--accent); color: var(--bg); font-weight: 600 }
+.lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 0 }
+.lista li { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 16px; padding-block: 18px; border-top: 1px solid var(--line) }
+.lista li:last-child { border-bottom: 1px solid var(--line) }
+.lista .ord { font: 500 .8rem/1.9 var(--data); letter-spacing: .08em; color: var(--accent) }
+.lista h3 { font-size: 1.2rem; line-height: 1.3; margin-bottom: 5px }
+.video { width: 100%; aspect-ratio: 16 / 9; background: #0e1a24; display: block; border-radius: 4px; margin-top: 8px }
+.limites { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 40px; margin-top: 8px }
+.limites h3 { font-size: 1.12rem; margin-bottom: 6px }
+.limites p { font-size: 1rem; color: var(--muted) }
+.cierre { background: var(--surface); padding: clamp(24px, 5vw, 48px); border-radius: 4px; display: grid; gap: 14px }
+.cierre h2 { font-size: clamp(1.7rem, 4vw, 2.5rem) }
+.pendiente { font: 400 .92rem/1.5 var(--data); border: 1px dashed var(--accent); padding: 10px 12px; width: fit-content; max-width: 100% }
+footer { border-top: 1px solid var(--line); padding-block: 28px 44px; font-size: .86rem; color: var(--muted); display: grid; gap: 12px }
+footer .marca { font-size: 1.25rem; color: var(--ink) }
+footer p { max-width: 62em }
+@media (max-width: 820px) {
+  .heroe, .apertura { grid-template-columns: minmax(0, 1fr) }
+  .cifras { grid-template-columns: repeat(2, minmax(0, 1fr)) }
+  .limites { grid-template-columns: minmax(0, 1fr) }
+}
+@media (max-width: 520px) {
+  .lista li { grid-template-columns: minmax(0, 1fr); gap: 2px }
+  .corte { grid-template-columns: 1fr }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto } .rango, .punto { transition: none } }
+</style>
+
+<div class="marco">
+  <header class="cab">
+    <a class="marca" href="#inicio">Ratio<i>.</i></a>
+    <nav aria-label="Secciones">
+      <a href="#vistos">El problema</a>
+      <a href="#considerandos">La información</a>
+      <a href="#resuelve">Qué responde</a>
+      <a href="#limites">Sus límites</a>
+      <a href="#demostracion">Demostración</a>
+    </nav>
+  </header>
+
+  <main id="inicio">
+    <div class="heroe">
+      <div>
+        <p class="etiqueta">La razón detrás de cada sentencia</p>
+        <h1>“Licenciado, ¿qué posibilidades tengo de ganar?”</h1>
+        <p class="entrada">Ratio te ayuda a responder esa pregunta con los datos del tribunal: compara tu asunto con lo que ya se ha resuelto y te da un análisis estimado.</p>
+        <div class="alcance"><span>Materia laboral</span><span>Juicios ordinarios</span><span>Ciudad de Aguascalientes, México</span></div>
+        <a class="boton" href="#demostracion">Solicita una demostración</a>
+      </div>
+      <aside class="simulador" aria-labelledby="sim-titulo" style="--p:50">
+        <h2 id="sim-titulo">Una estimación cambia con el juicio</h2>
+        <div class="valor" id="valor" aria-live="polite">50%</div>
+        <p class="nota" id="nota-estimacion">Resultado probable, no real.</p>
+        <div class="pista" aria-hidden="true"><div class="rango"></div><div class="punto"></div></div>
+        <div class="extremos"><span>menos probable</span><span>más probable</span></div>
+        <div class="etapas" role="group" aria-label="Etapa del juicio">
+          <button type="button" id="e1" data-v="50" aria-pressed="true">Demanda</button>
+          <button type="button" id="e2" data-v="61" aria-pressed="false">Contestación</button>
+          <button type="button" id="e3" data-v="54" aria-pressed="false">Réplica</button>
+          <button type="button" id="e4" data-v="58" aria-pressed="false">Contrarréplica</button>
+          <button type="button" id="e5" data-v="52" aria-pressed="false">Audiencia Preliminar</button>
+          <button type="button" id="e6" data-v="63" aria-pressed="false">Audiencia de Juicio</button>
+          <button type="button" id="e7" data-v="63" data-nota="El tribunal resuelve. Aquí termina la estimación." aria-pressed="false">Sentencia</button>
+        </div>
+        <p class="ilustrativo">Ejemplo con cifras ilustrativas. No son datos reales.</p>
+      </aside>
+    </div>
+
+    <section id="vistos" class="apertura">
+      <p class="parte">VISTOS</p>
+      <div>
+        <h2>Nadie alcanza a leer todo lo que resuelve un tribunal</h2>
+        <div class="texto">
+          <p>Tu cliente necesita saber si conviene conciliar o seguir el juicio. Esa respuesta suele apoyarse en la experiencia, la intuición y el último asunto que recuerdas. La experiencia vale mucho, pero tiene un límite: las sentencias se acumulan más rápido de lo que cualquiera puede leerlas.</p>
+          <p>Además, el 1 de septiembre de 2025 llegaron los jueces electos por voto popular. ¿Cuánto de lo que sabíamos sigue aplicando?</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="considerandos" class="apertura">
+      <p class="parte">CONSIDERANDOS</p>
+      <div>
+        <h2>Información pública, reunida y conectada</h2>
+        <div class="texto"><p>Los juicios, acuerdos y sentencias provienen de los tribunales laborales locales de la ciudad de Aguascalientes. La jurisprudencia de la Suprema Corte es nacional.</p></div>
+        <div class="cifras">
+          <div><b>+6,800</b><span>juicios ordinarios</span><small>En las listas de acuerdos.</small></div>
+          <div><b>+63 mil</b><span>acuerdos</span><small>Publicados desde julio de 2022.</small></div>
+          <div><b>761</b><span>sentencias públicas</span><small>De 705 expedientes, dictadas desde enero de 2022.</small></div>
+          <div><b>1,549</b><span>criterios de la SCJN</span><small>Jurisprudencia nacional de derecho individual del trabajo, de la Quinta a la Duodécima Época.</small></div>
+        </div>
+        <div class="corte" role="img" aria-label="De las 761 sentencias públicas, 653 son anteriores al 1 de septiembre de 2025 y 108 son de esa fecha en adelante.">
+          <div class="a">653 sentencias antes del 01/09/2025</div>
+          <div class="d">108 desde esa fecha</div>
+        </div>
+        <p class="nota" style="margin-top:10px">Ratio separa ambos periodos, porque lo resuelto por los jueces anteriores puede no anticipar cómo resuelven los actuales.</p>
+      </div>
+    </section>
+
+    <section id="resuelve" class="apertura">
+      <p class="parte">RESUELVE</p>
+      <div>
+        <h2>Las preguntas que Ratio busca responder</h2>
+        <ol class="lista">
+          <li><span class="ord">PRIMERO.</span><div><h3>Asuntos comparables</h3><p>¿Cómo terminaron los juicios con una acción, unas defensas y unas pruebas parecidas a las de tu caso?</p></div></li>
+          <li><span class="ord">SEGUNDO.</span><div><h3>Excepciones y defensas</h3><p>¿Cuáles ha acogido el tribunal, cuáles ha desestimado y con qué razonamiento?</p></div></li>
+          <li><span class="ord">TERCERO.</span><div><h3>Carga y valoración de la prueba</h3><p>¿Qué pruebas han pesado en la decisión y qué problemas aparecen al ofrecerlas o desahogarlas?</p></div></li>
+          <li><span class="ord">CUARTO.</span><div><h3>Jurisprudencia aplicable</h3><p>¿Qué criterios de la Suprema Corte se relacionan con tu asunto? Cada uno debe revisarse en su ficha oficial para confirmar su vigencia.</p></div></li>
+          <li><span class="ord">QUINTO.</span><div><h3>Estimación actualizable</h3><p>¿Cómo cambia el panorama de la demanda a la audiencia de juicio, conforme se fija la litis y se desahogan las pruebas?</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="apertura" aria-labelledby="video-titulo">
+      <p class="parte">VIDEO</p>
+      <div>
+        <h2 id="video-titulo">Ratio en poco más de minuto y medio</h2>
+        <video class="video" id="video-ratio" controls preload="metadata" src="Ratio_video.mp4">Tu navegador no puede reproducir este video.</video>
+      </div>
+    </section>
+
+    <section id="limites" class="apertura">
+      <p class="parte">LÍMITES</p>
+      <div>
+        <h2>Lo que Ratio no hace</h2>
+        <div class="limites">
+          <div><h3>No predice tu sentencia</h3><p>Da un análisis estimado comparado con los datos del tribunal: un resultado probable, no uno real.</p></div>
+          <div><h3>No es definitivo</h3><p>La estimación puede modificarse en cualquier momento según las circunstancias de cada juicio y su desarrollo probatorio.</p></div>
+          <div><h3>No ve todos los asuntos</h3><p>Los juicios conciliados o desistidos no llegan a sentencia, y no todas las sentencias dictadas aparecen en versión pública.</p></div>
+          <div><h3>No sustituye al abogado</h3><p>El criterio y la responsabilidad profesional siguen siendo tuyos.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="demostracion">
+      <div class="cierre">
+        <p class="etiqueta">En desarrollo</p>
+        <h2>Conoce Ratio en una demostración</h2>
+        <p>Para despachos laborales y abogados que litigan en la ciudad de Aguascalientes. Las estimaciones aún están en validación.</p>
+        <p class="pendiente">Datos de contacto por definir</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span class="marca">Ratio<i style="color:var(--accent);font-style:normal">.</i></span>
+    <p>Análisis estimado con base en datos públicos de juicios ordinarios laborales de los tribunales locales de la ciudad de Aguascalientes, México. No constituye un resultado real ni garantiza el sentido de una resolución. La estimación puede modificarse en cualquier momento según las circunstancias de cada juicio y su desarrollo probatorio. No sustituye el criterio del abogado responsable.</p>
+    <p class="expediente">Corte de la base: acuerdos publicados hasta el 30/10/2026.</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var sim = document.querySelector('.simulador');
+  var valor = document.getElementById('valor');
+  var botones = document.querySelectorAll('.etapas button');
+  botones.forEach(function (b) {
+    b.addEventListener('click', function () {
+      botones.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      sim.style.setProperty('--p', b.dataset.v);
+      valor.textContent = b.dataset.v + '%';
+      document.getElementById('nota-estimacion').textContent = b.dataset.nota || 'Resultado probable, no real.';
+    });
+  });
+})();
+</script>
